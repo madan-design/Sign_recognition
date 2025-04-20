@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hand Sign Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>🖐️ Hand Sign Recognition</h1>
+    <div class="camera-container">
+        <img id="videoFeed" src="{{ url_for('video_feed') }}">
+        <div id="overlayText">Turn Camera On for Detection</div>
+    </div>
+    <div class="controls">
+        <label class="switch">
+            <input type="checkbox" id="toggleCamera">
+            <span class="slider round"></span>
+        </label>
+        <label class="switch">
+            <input type="checkbox" id="toggleSkeleton">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <p id="outputText">Gesture Output: Watch this space!</p>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
