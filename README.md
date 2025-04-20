@@ -3,8 +3,6 @@
 
 A real-time hand gesture recognition system built using Python, OpenCV, Flask, and MediaPipe. The system detects specific hand gestures like Hello, Stop, No, Thank You, and Okay, displaying both a live video feed and gesture output via a web-based interface.
 
----
-
 ## 📌 Features
 
 - 🔴 Real-time camera feed in browser
