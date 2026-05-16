@@ -11,7 +11,6 @@
 </head>
 <body>
 
-    <!-- ── Desktop & Mobile Header ── -->
     <header class="app-header">
         <div class="header-inner">
             <span class="logo">🖐️</span>
@@ -22,34 +21,33 @@
         </div>
     </header>
 
-    <!-- ── Main Layout ── -->
     <div class="app-body">
 
-        <!-- LEFT: Video -->
         <section class="video-section">
             <div class="video-card">
                 <div class="camera-container">
-                    <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Camera Feed">
+                    <!-- Raw webcam preview (hidden, used as source) -->
+                    <video id="rawVideo" autoplay playsinline muted style="display:none;"></video>
+                    <!-- Canvas used to capture frames to send -->
+                    <canvas id="captureCanvas" style="display:none;"></canvas>
+                    <!-- Annotated frame returned from server displayed here -->
+                    <canvas id="displayCanvas"></canvas>
                     <div id="cameraOverlay">
                         <span class="overlay-icon">📷</span>
                         <p>Turn camera on to start</p>
                     </div>
-                    <!-- Gesture badge overlaid on video on mobile -->
                     <div id="gestureBadgeMobile" class="gesture-badge-mobile idle">—</div>
                 </div>
             </div>
-            <!-- Badge below video on desktop -->
             <div class="gesture-badge-wrap desktop-only">
                 <div id="gestureBadge" class="gesture-badge idle">—</div>
                 <span class="badge-label">Detected Gesture</span>
             </div>
         </section>
 
-        <!-- RIGHT: Side Panel (desktop) / Tab Panels (mobile) -->
         <aside class="side-panel">
 
-            <!-- Tab: Controls -->
-            <div class="panel-section" id="panel-controls">
+            <div class="panel-section" id="panel-controls" style="display:flex;">
                 <div class="control-card">
                     <h2>Controls</h2>
                     <div class="control-row">
@@ -88,8 +86,7 @@
                 </div>
             </div>
 
-            <!-- Tab: Gestures Reference -->
-            <div class="panel-section hidden" id="panel-gestures">
+            <div class="panel-section" id="panel-gestures">
                 <div class="gestures-card">
                     <h2>Supported Gestures</h2>
                     <ul class="gesture-list">
@@ -110,7 +107,6 @@
         </aside>
     </div>
 
-    <!-- ── Mobile Bottom Navigation ── -->
     <nav class="mobile-nav mobile-only">
         <button class="nav-btn active" data-tab="controls">
             <span>🎛️</span>
@@ -122,6 +118,7 @@
         </button>
     </nav>
 
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

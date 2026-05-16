@@ -78,11 +78,11 @@ h1 {
     background: #000;
 }
 
-#videoFeed {
+#displayCanvas {
     width: 100%;
     height: 100%;
-    object-fit: cover;
     display: block;
+    object-fit: cover;
 }
 
 #cameraOverlay {
@@ -154,7 +154,8 @@ h1 {
 .side-panel { display: flex; flex-direction: column; gap: 16px; }
 
 .panel-section { display: flex; flex-direction: column; gap: 16px; }
-.panel-section.hidden { display: none; }
+/* hidden class only used on mobile via JS */
+.panel-section.hidden { display: flex; }
 
 .control-card, .gestures-card, .history-card {
     background: var(--surface);
@@ -294,6 +295,9 @@ input:checked + .slider::before { transform: translateX(26px); }
     .mobile-nav  { display: flex !important; }
     .mobile-only { display: flex !important; }
     .desktop-only { display: none !important; }
+
+    /* On mobile, hidden panels are actually hidden */
+    .panel-section.hidden { display: none !important; }
 
     /* Show gesture badge overlaid on video */
     .gesture-badge-mobile { display: block; }
