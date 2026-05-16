@@ -1,85 +1,314 @@
-body {
-    text-align: center;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to right, #c2e59c, #64b3f4);
-    padding: 20px;
-    color: #333;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg:       #0f1117;
+    --surface:  #1a1d27;
+    --surface2: #22263a;
+    --accent:   #00e5a0;
+    --accent2:  #4f8ef7;
+    --text:     #e8eaf0;
+    --muted:    #7a7f9a;
+    --radius:   16px;
+    --shadow:   0 8px 32px rgba(0,0,0,0.45);
+    --nav-h:    64px;
 }
 
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.app-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--surface2);
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.logo { font-size: 2rem; line-height: 1; }
 h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.subtitle { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+
+/* ── App Body ────────────────────────────────────────── */
+.app-body {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
+    /* leave room for mobile bottom nav */
+    padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
+}
+
+/* ── Video Section ───────────────────────────────────── */
+.video-section { display: flex; flex-direction: column; gap: 12px; }
+
+.video-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
 .camera-container {
-    margin-bottom: 20px;
     position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #000;
 }
 
 #videoFeed {
-    width: 640px;
-    height: 480px;
-    border: 5px solid #fff;
-    border-radius: 20px;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
-}
-
-#overlayText {
-    position: absolute;
-    top: 45%;
-    left: 0;
     width: 100%;
-    font-size: 2em;
-    color: #ffffff;
-    font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
-.controls {
-    margin: 20px 0;
+#cameraOverlay {
+    position: absolute;
+    inset: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
+    background: rgba(0,0,0,0.78);
+    gap: 10px;
+}
+#cameraOverlay.hidden { display: none; }
+.overlay-icon { font-size: 2.8rem; }
+#cameraOverlay p { color: var(--muted); font-size: 0.95rem; }
+
+/* Gesture badge overlaid bottom-left on video (mobile) */
+.gesture-badge-mobile {
+    display: none;
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 6px 18px;
+    border-radius: 50px;
+    backdrop-filter: blur(6px);
+}
+.gesture-badge-mobile.idle   { background: rgba(34,38,58,0.85); color: var(--muted); }
+.gesture-badge-mobile.active { background: linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
+
+/* Desktop badge below video */
+.gesture-badge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 16px;
+    gap: 6px;
+    box-shadow: var(--shadow);
+}
+.gesture-badge {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 10px 36px;
+    border-radius: 50px;
+    min-width: 200px;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+.gesture-badge.idle   { background: var(--surface2); color: var(--muted); }
+.gesture-badge.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 0 24px rgba(0,229,160,0.3);
+    animation: pulse 0.6s ease;
+}
+@keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.badge-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── Side Panel ──────────────────────────────────────── */
+.side-panel { display: flex; flex-direction: column; gap: 16px; }
+
+.panel-section { display: flex; flex-direction: column; gap: 16px; }
+.panel-section.hidden { display: none; }
+
+.control-card, .gestures-card, .history-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+}
+.control-card h2, .gestures-card h2, .history-card h2 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
 }
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
+/* Controls */
+.control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--surface2);
 }
+.control-row:last-child { border-bottom: none; }
+.control-info { display: flex; align-items: center; gap: 12px; }
+.control-icon { font-size: 1.5rem; }
+.control-info strong { display: block; font-size: 0.95rem; }
+.control-info small  { color: var(--muted); font-size: 0.78rem; }
 
+/* Toggle switch — larger touch target on mobile */
+.switch { position: relative; display: inline-block; width: 56px; height: 30px; flex-shrink: 0; }
 .switch input { display: none; }
-
 .slider {
-    position: absolute;
+    position: absolute; inset: 0;
+    background: var(--surface2);
+    border-radius: 30px;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
+    transition: background 0.3s;
 }
-
-.slider:before {
+.slider::before {
+    content: '';
     position: absolute;
-    content: "";
-    height: 26px; width: 26px;
-    left: 4px; bottom: 4px;
-    background-color: white;
-    transition: .4s;
+    width: 22px; height: 22px;
+    left: 4px; top: 4px;
+    background: #fff;
     border-radius: 50%;
+    transition: transform 0.3s;
+}
+input:checked + .slider { background: var(--accent); }
+input:checked + .slider::before { transform: translateX(26px); }
+
+/* Gesture list */
+.gesture-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.gesture-list li { display: flex; align-items: center; gap: 12px; }
+.g-icon { font-size: 1.4rem; width: 30px; text-align: center; flex-shrink: 0; }
+.gesture-list strong { display: block; font-size: 0.9rem; }
+.gesture-list small  { color: var(--muted); font-size: 0.78rem; }
+
+/* History */
+.history-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.history-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    animation: slideIn 0.2s ease;
+}
+.history-list .empty-history { color: var(--muted); justify-content: center; background: transparent; }
+.history-time { color: var(--muted); font-size: 0.75rem; }
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-input:checked + .slider {
-    background-color: #007bff;
+/* ── Mobile Bottom Nav ───────────────────────────────── */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--surface);
+    border-top: 1px solid var(--surface2);
+    z-index: 200;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.mobile-nav { display: none; }
+
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+.nav-btn small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.nav-btn.active { color: var(--accent); }
+
+/* ── Utility ─────────────────────────────────────────── */
+.mobile-only { display: none !important; }
+.desktop-only { display: flex; }
+
+/* ── Tablet (≤ 900px) ────────────────────────────────── */
+@media (max-width: 900px) {
+    .app-body { grid-template-columns: 1fr; }
+    .side-panel { order: 2; }
+    .video-section { order: 1; }
 }
 
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
+/* ── Mobile (≤ 600px) ────────────────────────────────── */
+@media (max-width: 600px) {
+    .app-body {
+        padding: 12px 10px;
+        padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 8px);
+        gap: 12px;
+    }
 
-#outputText {
-    font-size: 1.2em;
-    margin-top: 15px;
+    /* Show mobile nav */
+    .mobile-nav  { display: flex !important; }
+    .mobile-only { display: flex !important; }
+    .desktop-only { display: none !important; }
+
+    /* Show gesture badge overlaid on video */
+    .gesture-badge-mobile { display: block; }
+
+    /* Header compact */
+    .logo { font-size: 1.5rem; }
+    h1    { font-size: 1.1rem; }
+    .subtitle { display: none; }
+
+    /* Full-width video */
+    .camera-container { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; }
+
+    /* Larger touch targets */
+    .control-row { padding: 14px 0; }
+    .switch { width: 62px; height: 34px; }
+    .slider::before { width: 26px; height: 26px; }
+    input:checked + .slider::before { transform: translateX(28px); }
 }
