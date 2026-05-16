@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Hand Sign Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-inner">
+            <span class="logo">🖐️</span>
+            <div>
+                <h1>Hand Sign Recognition</h1>
+                <p class="subtitle">Real-time gesture detection · MediaPipe</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-body">
+
+        <section class="video-section">
+            <div class="video-card">
+                <div class="camera-container">
+                    <!-- Raw webcam preview (hidden, used as source) -->
+                    <video id="rawVideo" autoplay playsinline muted style="display:none;"></video>
+                    <!-- Canvas used to capture frames to send -->
+                    <canvas id="captureCanvas" style="display:none;"></canvas>
+                    <!-- Annotated frame returned from server displayed here -->
+                    <canvas id="displayCanvas"></canvas>
+                    <div id="cameraOverlay">
+                        <span class="overlay-icon">📷</span>
+                        <p>Turn camera on to start</p>
+                    </div>
+                    <div id="gestureBadgeMobile" class="gesture-badge-mobile idle">—</div>
+                </div>
+            </div>
+            <div class="gesture-badge-wrap desktop-only">
+                <div id="gestureBadge" class="gesture-badge idle">—</div>
+                <span class="badge-label">Detected Gesture</span>
+            </div>
+        </section>
+
+        <aside class="side-panel">
+
+            <div class="panel-section" id="panel-controls" style="display:flex;">
+                <div class="control-card">
+                    <h2>Controls</h2>
+                    <div class="control-row">
+                        <div class="control-info">
+                            <span class="control-icon">📷</span>
+                            <div>
+                                <strong>Camera</strong>
+                                <small>Toggle live feed</small>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="toggleCamera">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-row">
+                        <div class="control-info">
+                            <span class="control-icon">🦴</span>
+                            <div>
+                                <strong>Skeleton</strong>
+                                <small>Show hand landmarks</small>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="toggleSkeleton">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="history-card">
+                    <h2>Gesture History</h2>
+                    <ul id="gestureHistory" class="history-list">
+                        <li class="empty-history">No gestures detected yet</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel-section" id="panel-gestures">
+                <div class="gestures-card">
+                    <h2>Supported Gestures</h2>
+                    <ul class="gesture-list">
+                        <li><span class="g-icon">👋</span><div><strong>HELLO</strong><small>Wave open hand side to side</small></div></li>
+                        <li><span class="g-icon">✋</span><div><strong>STOP</strong><small>All fingers + thumb open</small></div></li>
+                        <li><span class="g-icon">✊</span><div><strong>THANK YOU</strong><small>Closed fist</small></div></li>
+                        <li><span class="g-icon">👍</span><div><strong>OKAY</strong><small>Thumb up, fingers curled</small></div></li>
+                        <li><span class="g-icon">☝️</span><div><strong>NO</strong><small>Index finger only</small></div></li>
+                        <li><span class="g-icon">✌️</span><div><strong>PEACE</strong><small>Index + middle up</small></div></li>
+                        <li><span class="g-icon">🤙</span><div><strong>CALL ME</strong><small>Thumb + pinky up</small></div></li>
+                        <li><span class="g-icon">🤟</span><div><strong>I LOVE YOU</strong><small>Index + pinky + thumb up</small></div></li>
+                        <li><span class="g-icon">🖖</span><div><strong>GREETINGS</strong><small>Spread middle &amp; ring apart</small></div></li>
+                        <li><span class="g-icon">👎</span><div><strong>DISLIKE</strong><small>Thumb pointing down</small></div></li>
+                    </ul>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+
+    <nav class="mobile-nav mobile-only">
+        <button class="nav-btn active" data-tab="controls">
+            <span>🎛️</span>
+            <small>Controls</small>
+        </button>
+        <button class="nav-btn" data-tab="gestures">
+            <span>🤚</span>
+            <small>Gestures</small>
+        </button>
+    </nav>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
