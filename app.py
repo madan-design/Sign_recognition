@@ -9,7 +9,7 @@ from hand_gesture_utils import detect_gesture
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sign_recognition_secret'
-socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='gevent')
 
 mp_hands   = mp.solutions.hands
 hands      = mp_hands.Hands(

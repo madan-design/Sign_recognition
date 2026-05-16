@@ -1,7 +1,8 @@
 flask==3.1.1
 flask-socketio==5.6.1
-eventlet==0.41.0
-mediapipe==0.10.35
-opencv-python-headless==4.13.0.92
-numpy==2.2.6
+gevent==24.11.1
+gevent-websocket==0.10.1
+mediapipe==0.10.33
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
 gunicorn==21.2.0
